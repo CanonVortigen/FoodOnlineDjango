@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
-from accounts.models import User
+from accounts.models import User, UserProfile
+from vendor.forms import VendorForm
 from . forms import Userform
 from django.contrib import messages
 
@@ -40,3 +41,37 @@ def registerUser(request):
     }
 
     return render(request, 'accounts/registerUser.html', context)
+
+def registerVendor(request):
+    if request.method == 'POST':
+        #store the data and create the user
+        form = Userform(request.POST)
+        v_form = VendorForm(request.POST, request.FILES)
+        if form.is_valid() and v_form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']            
+            password = form.cleaned_data['password']
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            user.role = User.VENDOR
+            user.save()
+            vendor = v_form.save(commit=False)# Use this line to provide data that aren't in my model
+            vendor.user = user
+            user_profile = UserProfile.objects.get(user=user) #search the user_profile in user
+            vendor.user_profile = user_profile
+            vendor.save()
+            messages.success(request, 'Your account has been registered sucessfully! Please wait for the approval.')
+            return redirect('registerVendor')
+        else:
+            print('Invalid Form')
+            print(form.errors)
+    else:
+        form = Userform()
+        v_form = VendorForm()
+    
+    context = {
+        'form':form,
+        'v_form': v_form,
+    }
+    return render(request, 'accounts/registerVendor.html', context)
