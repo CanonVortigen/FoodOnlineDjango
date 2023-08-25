@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from accounts.models import User, UserProfile
 from accounts.utils import detectUser, send_verification_email, default_token_generator
 from vendor.forms import VendorForm
+from vendor.models import Vendor
 from . forms import Userform
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -166,7 +167,7 @@ def customerDashboard(request):
 
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
-def vendorDashboard(request):
+def vendorDashboard(request):   
     return render(request, 'accounts/vendorDashboard.html')
 
 def forgot_password(request):
