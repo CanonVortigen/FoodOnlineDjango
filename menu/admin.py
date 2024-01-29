@@ -11,6 +11,7 @@ class FoodItemAdmin(admin.ModelAdmin):
     list_display = ('food_title', 'category', 'vendor', 'price', 'is_available', 'updated_at')
     search_fields = ('food_title', 'category__category_name', 'vendor__vendor_name', 'price')
     list_filter = ('is_available',)
+    list_display_links = ('food_title', 'category', 'vendor')
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(FoodItem, FoodItemAdmin)
