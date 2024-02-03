@@ -54,7 +54,7 @@ def registerUser(request):
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template) 
 
-            messages.success(request, 'Your account has been registered successfully!') 
+            messages.success(request, 'Your account has been registered successfully! Please wait for the approval.') 
             return redirect('registerUser')
     else:
         form = UserForm()
